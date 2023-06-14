@@ -1,0 +1,31 @@
+{% extends 'main/main.html' %}
+
+
+{% block mainlist%}
+
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Title</th>
+        <th scope="col">Uploaded</th>
+        <th scope="col">Live</th>
+        <th scope="col">Mode</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for file in files %}
+      <tr>
+        <th scope="row">{{file.id}}</th>
+        <td>{{file.title}}</td>
+        <td>{{file.created}}</td>
+        <td><a class="btn btn-primary btn-sm" href="{% url 'viewPage' file.id %}" role="button">Open</a></td>
+        <td>{{file.mode}}</td>
+        <td><a class="btn btn-danger btn-sm" href="{% url 'deletePage' file.id %}" role="button">Delete</a></td>
+      </tr>
+      {% endfor %}
+      
+    </tbody>
+  </table>
+{% endblock mainlist%}

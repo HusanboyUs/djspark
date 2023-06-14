@@ -1,0 +1,12 @@
+{% extends 'main/main.html' %}
+
+
+
+{% block mainlive%}
+
+{{ result | safe }}
+<br>
+<form action="" method="PUT">
+<button type="submit" class="btn btn-secondary btn-sm">Download File</button>
+</form>
+{% endblock mainlive%}
