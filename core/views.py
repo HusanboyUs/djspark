@@ -5,6 +5,7 @@ from .forms import FileUploadForm
 from .models import FileModel
 from django.conf import settings
 from django.http import HttpResponse
+import multiprocessing
 
 def mainPage(request):
     latest_file = None
@@ -38,12 +39,36 @@ def viewPage(request,pk):
     file=FileModel.objects.get(id=pk)
     file_path=os.path.join(settings.MEDIA_ROOT,file.file.name)
     print(file.mode)
+    machine=SparkApp(file_path)
     if file.mode == 'ALL':
-        result=SparkApp(file_path).cleanAll()
+        result=machine.cleanAll()
+        schema=machine.recommendSchema()
+     
     else:
-        result=SparkApp(file_path).cleanAny()  
+        result=machine.cleanAny()
+        schema=machine.recommendSchema()
 
-    if request.method == 'PUT':
+    
+    
+    print('schema is saved! --------------')
+
+   
+    context={'result':result,'schema':schema,'file':file}
+    return render(request,'main/live.html',context)        
+
+
+
+
+
+def deletePage(request,pk):
+    file=FileModel.objects.get(id=pk)
+    file.delete()
+    return redirect('listPage')
+
+def downloadPage(request,pk):
+    file=FileModel.objects.get(id=pk)
+    file_path=os.path.join(settings.MEDIA_ROOT,file.file.name)
+    if request.method == 'GET':
         file_path = file.file.path
         with open(file_path, 'rb') as file:
         # Set the appropriate content-type and headers for the response
@@ -51,13 +76,5 @@ def viewPage(request,pk):
             response['Content-Disposition'] = f'attachment; filename="{os.path.basename(file_path)}"'
 
         return response     
-    
 
-    context={'result':result}
-    return render(request,'main/live.html',context)        
-
-def deletePage(request,pk):
-    file=FileModel.objects.get(id=pk)
-    file.delete()
-    return redirect('listPage')   
 

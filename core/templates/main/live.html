@@ -4,8 +4,19 @@
 
 {% block mainlive%}
 
+<div class="card border-primary mb-3">
+    <h5 class="card-header">Generated Schema</h5>
+    <div class="card-body">
+      <p class="card-text">{{schema}}</p>
+    </div>
+</div>
+
+{{file.schema}}
+
+<br>
 {{ result | safe }}
 <br>
+
 <form action="" method="PUT">
 <button type="submit" class="btn btn-secondary btn-sm">Download File</button>
 </form>
